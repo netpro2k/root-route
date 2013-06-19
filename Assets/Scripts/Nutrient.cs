@@ -18,6 +18,7 @@ public class Nutrient : MonoBehaviour {
 	void OnTriggerEnter(Collider other) {
 		if(other.CompareTag("RootTip")) {
 			AudioSource.PlayClipAtPoint(pickupSound, Camera.main.transform.position);
+			GameManager.Instance.NutrientCollected();
 			Destroy(gameObject);
 		}
 	}
