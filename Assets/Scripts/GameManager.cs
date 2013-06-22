@@ -17,6 +17,7 @@ public class GameManager : MonoBehaviour {
 	
 	private int nutrientsCollected = 0;
 	private tk2dSpriteAnimator flower;
+	private tk2dCamera tkCam;
 	
 	void Awake () {
         Instance = this;
@@ -27,6 +28,8 @@ public class GameManager : MonoBehaviour {
 	void Start () {
 		flower = GameObject.Find("Seed/Flower").GetComponent<tk2dSpriteAnimator>();
 		flower.gameObject.SetActive(false);
+		
+		tkCam = Camera.mainCamera.GetComponent<tk2dCamera>();
 	}
 	
 	
@@ -82,7 +85,7 @@ public class GameManager : MonoBehaviour {
 		
 		Sequence winSequence = new Sequence(new SequenceParms().UpdateType(UpdateType.TimeScaleIndependentUpdate));
 		winSequence.Append(HOTween.To(Camera.mainCamera.transform, 1, new TweenParms()
-			.Prop("position", new Vector3(Camera.mainCamera.transform.position.x, flower.transform.position.y, Camera.mainCamera.transform.position.z))
+			.Prop("position", new Vector3(Camera.mainCamera.transform.position.x, flower.transform.position.y - tkCam.nativeResolutionHeight/2, Camera.mainCamera.transform.position.z))
 			.Ease(EaseType.EaseOutQuad)
 		));
 		winSequence.AppendCallback(GrowFlower);
