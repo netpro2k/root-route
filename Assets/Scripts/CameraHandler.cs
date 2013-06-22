@@ -13,7 +13,7 @@ public class CameraHandler : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
 		GameObject target = GameObject.FindGameObjectWithTag("RootTip");
-		if(target && GameManager.Instance.State == GameManager.GameState.Playing) {
+		if(target) {
 			transform.position = new Vector3(transform.position.x, Mathf.Floor(target.transform.position.y) - tkCam.nativeResolutionHeight + topOffset, transform.position.z);
 		}
 	}

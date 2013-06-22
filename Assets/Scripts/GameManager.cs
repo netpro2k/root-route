@@ -9,6 +9,9 @@ public class GameManager : MonoBehaviour {
 	
 	public GameState State;
 	
+	public GameObject pauseMenu;
+	public GameObject pauseButton;
+	
 	private int nutrientsCollected = 0;
 	private tk2dSpriteAnimator flower;
 	
@@ -26,6 +29,42 @@ public class GameManager : MonoBehaviour {
 		nutrientsCollected++;
 	}
 	
+	public void Pause() {
+		Time.timeScale = 0;
+		State = GameState.Paused;
+		pauseButton.SetActive(false);
+		iTween.MoveTo(pauseMenu.gameObject, iTween.Hash(
+			"y", 0, 
+			"time", 1, 
+			"isLocal", true,
+			"easetype", iTween.EaseType.easeOutBounce,
+			"ignoretimescale", true
+		));
+	}
+	
+	public void UnPause() {
+		Time.timeScale = 1;
+		State = GameState.Playing;
+		pauseButton.SetActive(true);
+		iTween.MoveTo(pauseMenu.gameObject, iTween.Hash(
+			"y", 200, 
+			"time", 0.5f, 
+			"isLocal", true,
+			"easetype", iTween.EaseType.easeOutQuad,
+			"ignoretimescale", true
+		));
+	}
+	
+	public void ExitLevel() {
+		Time.timeScale = 1;
+		Application.LoadLevel("Level Select");
+	}
+	
+	public void RestartLevel() {
+		Time.timeScale = 1;
+		Application.LoadLevel(Application.loadedLevel);
+	}
+	
 	public void Win() {
 		State = GameState.Winning;
 		
@@ -41,7 +80,7 @@ public class GameManager : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
 		if(!GameObject.FindGameObjectWithTag("RootTip")) {
-			Application.LoadLevel(Application.loadedLevel);
+			RestartLevel();
 		}
 	}
 }
