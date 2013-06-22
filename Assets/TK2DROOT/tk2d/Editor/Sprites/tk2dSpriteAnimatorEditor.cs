@@ -152,6 +152,15 @@ class tk2dSpriteAnimatorEditor : Editor
 					animator.playAutomatically = newPlayAutomatically;
 				}
 			}
+			
+			// Timescale Independant
+			bool newTimescaleIndependant = EditorGUILayout.Toggle("Timescale Independant", sprite.timescaleIndependant);
+			if (newTimescaleIndependant != sprite.timescaleIndependant) {
+				Undo.RegisterUndo(targetAnimators, "Sprite Anim Timescale Independant");
+				foreach (tk2dSpriteAnimator animator in targetAnimators) {
+					animator.timescaleIndependant = newTimescaleIndependant;
+				}
+			}
 
 			if (GUI.changed)
 			{

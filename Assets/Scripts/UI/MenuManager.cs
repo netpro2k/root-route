@@ -1,16 +1,25 @@
 using UnityEngine;
 using System.Collections;
+using Holoville.HOTween;
 
 public class MenuManager : MonoBehaviour {
 	
 	public tk2dTextMesh titleLabel;
-	public LevelSelectButton[] levelSelectButtons;
+	
+	public GameObject worldSelectContainer;
 	public GameObject[] worldSelectButtons;
+	private Sequence worldSelectTween;
 	
 	public GameObject levelSelectContainer;
-	public GameObject worldSelectContainer;
+	public LevelSelectButton[] levelSelectButtons;
+	private Sequence levelSelectTween;
 	
 	private int selectedWorld = -1;
+	
+	void Awake () {
+		SetupWorldSelectTween ();
+		SetupLevelSelectTween ();
+	}
 	
 	// Use this for initialization
 	void Start ()
@@ -19,52 +28,53 @@ public class MenuManager : MonoBehaviour {
 		levelSelectContainer.transform.position = new Vector3(0,999,0);
 		ShowWorldSelect ();
 	}
-	
-	public void ShowWorldSelect ()
+
+	void SetupWorldSelectTween ()
 	{
+		worldSelectTween = new Sequence(new SequenceParms().AutoKill(false));
 		for (int i = 0; i < worldSelectButtons.Length; i++) {
 			var button = worldSelectButtons[i];
 			button.GetComponent<tk2dUIItem>().OnClickUIItem += WorldSelected;
-			iTween.MoveFrom(button.gameObject, iTween.Hash(
-				"position", new Vector3(button.transform.position.x, i % 2 == 0 ? 235 : -75, 0), 
-				"time", 0.5, 
-				"easetype", iTween.EaseType.easeOutBack,
-				"delay", 1
+			worldSelectTween.Insert(1, HOTween.From(button.transform, 0.5f, new TweenParms()
+				.Prop("position", new Vector3(button.transform.position.x, i % 2 == 0 ? 235 : -75, 0))		
+				.Ease(EaseType.EaseOutBack)
 			));
 		}
+	}
+
+	void SetupLevelSelectTween ()
+	{
+		levelSelectTween = new Sequence(new SequenceParms().AutoKill(false));
+		for (int i = 0; i < levelSelectButtons.Length; i++) {
+			var button = levelSelectButtons[i];
+			button.GetComponent<tk2dUIItem>().OnClickUIItem += levelSelected;
+			levelSelectTween.Insert(0, HOTween.From(button.transform, 0.5f, new TweenParms()
+				.Prop("position", new Vector3(280,button.transform.position.y, 0))
+				.Ease(EaseType.EaseOutBack)
+			));
+		}
+		
+		levelSelectTween.Insert(0, HOTween.From(titleLabel.transform, 0.5f, new TweenParms()
+			.Prop("position", new Vector3(titleLabel.transform.position.x, 180, 0))
+			.Ease(EaseType.EaseOutQuad)
+		));
+	}
+	
+	public void ShowWorldSelect ()
+	{	
+		worldSelectTween.Play();
 	}	
 	
 	public void HideWorldSelect ()
 	{
-		for (int i = 0; i < worldSelectButtons.Length; i++) {
-			var button = worldSelectButtons[i];
-			button.GetComponent<tk2dUIItem>().OnClickUIItem += levelSelected;
-			iTween.MoveTo(button.gameObject, iTween.Hash(
-				"position", new Vector3(button.transform.position.x, i % 2 == 0 ? 235 : -75, 0), 
-				"time", 0.5, 
-				"easetype", iTween.EaseType.easeOutBack
-			));
-		}
+		worldSelectTween.PlayBackwards();
 	}
 	
 	public void ShowLevelSelect ()
 	{
 		levelSelectContainer.transform.position = Vector3.zero;
-		for (int i = 0; i < levelSelectButtons.Length; i++) {
-			var button = levelSelectButtons[i];
-			button.GetComponent<tk2dUIItem>().OnClickUIItem += levelSelected;
-			iTween.MoveFrom(button.gameObject, iTween.Hash(
-				"position", new Vector3(280,button.transform.position.y, 0), 
-				"time", 0.5, 
-				"easetype", iTween.EaseType.easeOutBack
-			));
-		}
 		
-		iTween.MoveFrom(titleLabel.gameObject, iTween.Hash(
-			"position", new Vector3(titleLabel.transform.position.x, 180, 0), 
-			"time", 0.5, 
-			"easetype", iTween.EaseType.easeOutBack
-		));
+		levelSelectTween.Play();
 	}
 
 	void levelSelected (tk2dUIItem uiItem)
@@ -82,32 +92,16 @@ public class MenuManager : MonoBehaviour {
 	}
 	
 	IEnumerator animateToLevelSelect(int world) {
-
 		HideWorldSelect();
-		
 		yield return new WaitForSeconds(0.5f);
-		
 		ShowLevelSelect();
 	}
 	
 	IEnumerator animateToLevel(int world, int level) {
-		for (int i = 0; i < levelSelectButtons.Length; i++) {
-			var button = levelSelectButtons[i];
-			iTween.MoveTo(button.gameObject, iTween.Hash(
-				"position", new Vector3(-40,button.transform.position.y, 0), 
-				"time", 1, 
-				"easetype", iTween.EaseType.easeOutBack
-			));
-		}
-		
-		iTween.MoveTo(titleLabel.gameObject, iTween.Hash(
-			"position", new Vector3(titleLabel.transform.position.x, 180, 0), 
-			"time", 1, 
-			"easetype", iTween.EaseType.easeOutBack
-		));
-		
-		yield return new WaitForSeconds(1);
-		
+		levelSelectTween.PlayBackwards();
+		yield return StartCoroutine(levelSelectTween.WaitForRewind());
+		worldSelectTween.Kill();
+		levelSelectTween.Kill();
 		Application.LoadLevel("Level " + world + "-" + level);
 	}
 	

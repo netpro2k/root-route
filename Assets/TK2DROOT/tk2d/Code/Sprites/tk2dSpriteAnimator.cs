@@ -16,6 +16,12 @@ public class tk2dSpriteAnimator : MonoBehaviour
 	/// </summary>
 	public bool playAutomatically = false;
 	
+	/// <summary>
+	/// Interface option to make this animation ignore Time.timeScale
+	/// </summary>
+	public bool timescaleIndependant = false;
+
+	
 	// This is now an int so we'll be able to or bitmasks
 	static State globalState = 0;
 
@@ -64,7 +70,7 @@ public class tk2dSpriteAnimator : MonoBehaviour
 	public tk2dSpriteAnimationClip DefaultClip {
 		get { return GetClipById(defaultClipId); }
 	}
-
+	
 
 	/// <summary>
 	/// Currently active clip
@@ -722,7 +728,7 @@ public class tk2dSpriteAnimator : MonoBehaviour
 	
 	void LateUpdate() 
 	{
-		UpdateAnimation(Time.deltaTime);
+		UpdateAnimation(timescaleIndependant ? tk2dUITime.deltaTime : Time.deltaTime);
 	}
 
 	public virtual void SetSprite(tk2dSpriteCollectionData spriteCollection, int spriteId) {
