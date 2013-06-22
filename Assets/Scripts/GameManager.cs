@@ -12,7 +12,8 @@ public class GameManager : MonoBehaviour {
 	
 	public GameObject pauseMenu;
 	public GameObject pauseButton;
-	private Sequence pauseTween;
+	private Tweener pauseInTween;
+	private Tweener pauseOutTween;
 	
 	private int nutrientsCollected = 0;
 	private tk2dSpriteAnimator flower;
@@ -31,34 +32,37 @@ public class GameManager : MonoBehaviour {
 	
 	#region pause menu handling
 	private void SetupPauseTween() {
-		pauseTween = new Sequence(new SequenceParms().AutoKill(false).UpdateType(UpdateType.TimeScaleIndependentUpdate));
-		
-		pauseTween.Append(HOTween.To(pauseMenu.transform, 1, new TweenParms()
+		pauseInTween = HOTween.To(pauseMenu.transform, 1, new TweenParms()
 			.Prop ("localPosition", Vector3.zero)
 			.Ease(EaseType.EaseOutBounce)
 			.UpdateType(UpdateType.TimeScaleIndependentUpdate)
-		));
-		pauseTween.AppendCallback(pauseTween.Pause);
-		pauseTween.Append(HOTween.To(pauseMenu.transform, 0.5f, new TweenParms()
+			.AutoKill(false)
+			.Pause()
+		);
+		
+		pauseOutTween = HOTween.To(pauseMenu.transform, 0.5f, new TweenParms()
 			.Prop ("localPosition", new Vector3(0,200,0))
 			.Ease(EaseType.EaseOutQuad)
 			.UpdateType(UpdateType.TimeScaleIndependentUpdate)
-		));
+			.AutoKill(false)
+			.Pause()
+		);
 	}
 	
 	public void Pause() {
 		Time.timeScale = 0;
 		State = GameState.Paused;
 		pauseButton.SetActive(false);
-		pauseTween.Rewind();
-		pauseTween.Play();
+		pauseInTween.Rewind();
+		pauseInTween.Play();
 	}
 	
 	public void UnPause() {
 		Time.timeScale = 1;
 		State = GameState.Playing;
 		pauseButton.SetActive(true);
-		pauseTween.Play();
+		pauseOutTween.Rewind();
+		pauseOutTween.Play();
 	}
 	
 	public void ExitLevel() {
