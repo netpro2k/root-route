@@ -96,7 +96,6 @@ public class GameManager : MonoBehaviour {
 	
 	public void NutrientCollected(){
 		nutrientsCollected++;
-		Win ();
 	}
 	
 	// Update is called once per frame
