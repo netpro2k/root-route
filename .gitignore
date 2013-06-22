@@ -3,6 +3,10 @@
 *.swp
 *.Trashes
 
+# 2D Toolkit
+Assets/-tk2d
+Assets/Resources/tk2d/*
+
 # All platforms:
 Library
 Temp
