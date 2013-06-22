@@ -4,7 +4,8 @@
 *.Trashes
 
 # 2D Toolkit
-Assets/-tk2d
+Assets/-tk2d.asset
+Assets/-tk2d.asset.meta
 Assets/Resources/tk2d/*
 
 # All platforms:
