@@ -34,6 +34,7 @@ public class MenuManager : MonoBehaviour {
 		worldSelectTween = new Sequence(new SequenceParms().AutoKill(false));
 		for (int i = 0; i < worldSelectButtons.Length; i++) {
 			var button = worldSelectButtons[i];
+			button.GetComponent<tk2dUIUpDownDisableButton>().Disabled = i > 0;
 			button.GetComponent<tk2dUIItem>().OnClickUIItem += WorldSelected;
 			worldSelectTween.Insert(1, HOTween.From(button.transform, 0.5f, new TweenParms()
 				.Prop("position", new Vector3(button.transform.position.x, i % 2 == 0 ? 235 : -75, 0))		
