@@ -15,6 +15,10 @@ public class GameManager : MonoBehaviour {
 	private Tweener pauseInTween;
 	private Tweener pauseOutTween;
 	
+	public GameObject levelCompleteMenu;
+	private Tweener levelCompleteInTween;
+	private Tweener levelCompleteOutTween;
+	
 	private int nutrientsCollected = 0;
 	private tk2dSpriteAnimator flower;
 	private tk2dCamera tkCam;
@@ -23,6 +27,7 @@ public class GameManager : MonoBehaviour {
         Instance = this;
 		State = GameState.Playing;
 		SetupPauseTween();
+		SetupLevelCompleteTween();
 	}
 	
 	void Start () {
@@ -79,9 +84,29 @@ public class GameManager : MonoBehaviour {
 	}
 	#endregion
 	
+	private void SetupLevelCompleteTween() {
+		levelCompleteInTween = HOTween.To(levelCompleteMenu.transform, 1, new TweenParms()
+			.Prop ("localPosition", Vector3.zero)
+			.Ease(EaseType.EaseOutBounce)
+			.UpdateType(UpdateType.TimeScaleIndependentUpdate)
+			.AutoKill(false)
+			.Pause()
+		);
+		
+		levelCompleteOutTween = HOTween.To(levelCompleteMenu.transform, 0.5f, new TweenParms()
+			.Prop ("localPosition", new Vector3(0,200,0))
+			.Ease(EaseType.EaseOutQuad)
+			.UpdateType(UpdateType.TimeScaleIndependentUpdate)
+			.AutoKill(false)
+			.Pause()
+		);
+	}
+	
+	
 	public void Win() {
 		State = GameState.Winning;
 		Time.timeScale = 0;
+		pauseButton.SetActive(false);
 		
 		Sequence winSequence = new Sequence(new SequenceParms().UpdateType(UpdateType.TimeScaleIndependentUpdate));
 		winSequence.Append(HOTween.To(Camera.mainCamera.transform, 1, new TweenParms()
@@ -89,7 +114,15 @@ public class GameManager : MonoBehaviour {
 			.Ease(EaseType.EaseOutQuad)
 		));
 		winSequence.AppendCallback(GrowFlower);
+		winSequence.AppendInterval(1);
+		winSequence.Append (levelCompleteInTween);
+		
 		winSequence.Play();
+	}
+	
+	public void NextLevel() {
+		Time.timeScale = 1;
+		Application.LoadLevel(Application.loadedLevel + 1);
 	}
 	
 	public void GrowFlower() {
@@ -99,6 +132,7 @@ public class GameManager : MonoBehaviour {
 	
 	public void NutrientCollected(){
 		nutrientsCollected++;
+		Win ();
 	}
 	
 	// Update is called once per frame
