@@ -76,6 +76,7 @@ public class RootTip : MonoBehaviour {
 		}
 		
 		cooldownAnim.PlayFrom(cooldownAnim.CurrentClip, 0);
+		cooldownAnim.transform.rotation = Quaternion.identity;
 		
 		// Spawn the other tip		
 		RootTip newTip = ((GameObject) Instantiate(this.gameObject)).GetComponent<RootTip>();	
@@ -85,6 +86,7 @@ public class RootTip : MonoBehaviour {
 		vel.x = rigidbody.velocity.x * -1;
 		newTip.rigidbody.velocity = vel;
 		newTip.UpdateSegmentSpawnRate(11f/speed);
+		newTip.cooldownAnim.transform.rotation = Quaternion.identity;
 		
 		return this;
 	}

@@ -8,6 +8,8 @@ public class MenuManager : MonoBehaviour {
 	
 	public GameObject worldSelectContainer;
 	public GameObject[] worldSelectButtons;
+	public AudioClip transitionSound;
+	
 	private Sequence worldSelectTween;
 	
 	public GameObject levelSelectContainer;
@@ -41,6 +43,7 @@ public class MenuManager : MonoBehaviour {
 				.Ease(EaseType.EaseOutBack)
 			));
 		}
+		worldSelectTween.InsertCallback(1, PlayTransitionSound);
 	}
 
 	void SetupLevelSelectTween ()
@@ -59,6 +62,11 @@ public class MenuManager : MonoBehaviour {
 			.Prop("position", new Vector3(titleLabel.transform.position.x, 180, 0))
 			.Ease(EaseType.EaseOutQuad)
 		));
+	}
+	
+	public void PlayTransitionSound()
+	{
+		AudioSource.PlayClipAtPoint(transitionSound, Camera.main.transform.position);
 	}
 	
 	public void ShowWorldSelect ()
@@ -100,6 +108,7 @@ public class MenuManager : MonoBehaviour {
 	
 	IEnumerator animateToLevel(int world, int level) {
 		levelSelectTween.PlayBackwards();
+		PlayTransitionSound();
 		yield return StartCoroutine(levelSelectTween.WaitForRewind());
 		worldSelectTween.Kill();
 		levelSelectTween.Kill();

@@ -14,7 +14,7 @@ public class CameraHandler : MonoBehaviour {
 	void Update () {
 		GameObject target = GameObject.FindGameObjectWithTag("RootTip");
 		if(target && GameManager.Instance.State == GameManager.GameState.Playing) {
-			transform.position = new Vector3(transform.position.x, Mathf.Floor(target.transform.position.y) - tkCam.nativeResolutionHeight + topOffset, transform.position.z);
+			transform.position = new Vector3(transform.position.x, (target.transform.position.y) - tkCam.nativeResolutionHeight + topOffset, transform.position.z);
 		}
 	}
 }
