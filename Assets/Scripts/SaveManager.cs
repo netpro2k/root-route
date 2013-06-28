@@ -39,6 +39,11 @@ public class SaveManager
 				levelNutrients[world,level] = PlayerPrefs.GetInt("Level" + world + "-" + level, -1);
 			}
 		}
+		
+		// Always unlock first level
+		if(levelNutrients[0,0] == -1) {
+			levelNutrients[0,0] = 0;
+		}
     }
 	
 	public void SaveNutrientsForLevel(int world, int level, int nutrients) {
