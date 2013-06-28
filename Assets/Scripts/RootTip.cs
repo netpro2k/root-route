@@ -34,19 +34,18 @@ public class RootTip : MonoBehaviour {
 	}
 	
     void OnCollisionEnter(Collision collision) {
-        foreach (ContactPoint contact in collision.contacts) {
-            Debug.DrawRay(contact.point, contact.normal, Color.white);
+//        foreach (ContactPoint contact in collision.contacts) {
+//            Debug.DrawRay(contact.point, contact.normal, Color.white);
 			
-			int tileId = tilemap.GetTileIdAtPosition(contact.point,0);
-			tk2dRuntime.TileMap.TileInfo tile = tilemap.GetTileInfoForTileId(tileId);
-			Debug.Log (tile.stringVal);
-			if(tile.stringVal == "brick" || tile.stringVal == "") {
+//			int tileId = tilemap.GetTileIdAtPosition(contact.point,0);
+//			tk2dRuntime.TileMap.TileInfo tile = tilemap.GetTileInfoForTileId(tileId);
+//			if(tile.stringVal == "brick" || tile.stringVal == "") {
 				Curl();
-				break;
-			} else if (tile.stringVal == "water") {
-				Application.LoadLevel(Application.loadedLevel);
-			}
-        }
+//				break;
+//			} else if (tile.stringVal == "water") {
+//				Application.LoadLevel(Application.loadedLevel);
+//			}
+//        }
     }
 		
 	GameObject SpawnSegment(){
@@ -61,6 +60,8 @@ public class RootTip : MonoBehaviour {
 	}
 	
 	public RootTip Split() {
+		Handheld.Vibrate();
+		
 		// Update this tip's orientation
 		if(transform.eulerAngles.z == 0) {
 			GameObject junction = SpawnSegment("Y Junction");
