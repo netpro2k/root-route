@@ -108,6 +108,8 @@ public class GameManager : MonoBehaviour {
 		Time.timeScale = 0;
 		pauseButton.SetActive(false);
 		
+		SaveManager.Instance.SaveNutrientsForLevel(0,0,nutrientsCollected);
+		
 		Sequence winSequence = new Sequence(new SequenceParms().UpdateType(UpdateType.TimeScaleIndependentUpdate));
 		winSequence.Append(HOTween.To(Camera.mainCamera.transform, 1, new TweenParms()
 			.Prop("position", new Vector3(Camera.mainCamera.transform.position.x, flower.transform.position.y - tkCam.nativeResolutionHeight/2, Camera.mainCamera.transform.position.z))

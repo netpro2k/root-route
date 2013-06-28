@@ -52,6 +52,7 @@ public class MenuManager : MonoBehaviour {
 		for (int i = 0; i < levelSelectButtons.Length; i++) {
 			var button = levelSelectButtons[i];
 			button.GetComponent<tk2dUIItem>().OnClickUIItem += levelSelected;
+			button.SetWorldAndLevel(0,i);
 			levelSelectTween.Insert(0, HOTween.From(button.transform, 0.5f, new TweenParms()
 				.Prop("position", new Vector3(280,button.transform.position.y, 0))
 				.Ease(EaseType.EaseOutBack)
@@ -89,8 +90,7 @@ public class MenuManager : MonoBehaviour {
 	void levelSelected (tk2dUIItem uiItem)
 	{
 		LevelSelectButton btn = uiItem.GetComponent<LevelSelectButton>();
-		Debug.Log ("LEVEL" + btn.levelNumber);
-		StartCoroutine(animateToLevel(1, btn.levelNumber));
+		StartCoroutine(animateToLevel(btn.world+1, btn.level+1));
 	}
 	
 	void WorldSelected (tk2dUIItem uiItem)
