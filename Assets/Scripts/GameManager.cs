@@ -6,7 +6,7 @@ public class GameManager : MonoBehaviour {
 	
     // Static singleton property
     public static GameManager Instance { get; private set; }
-	public enum GameState {Playing, Paused, Winning};
+	public enum GameState {Playing, Paused, Winning, Losing};
 	
 	public GameState State;
 	
@@ -17,7 +17,9 @@ public class GameManager : MonoBehaviour {
 	
 	public GameObject levelCompleteMenu;
 	private Tweener levelCompleteInTween;
-	private Tweener levelCompleteOutTween;
+	
+	public GameObject levelFailMenu;
+	private Tweener levelFailInTween;
 	
 	private int nutrientsCollected = 0;
 	private tk2dSpriteAnimator flower;
@@ -28,6 +30,7 @@ public class GameManager : MonoBehaviour {
 		State = GameState.Playing;
 		SetupPauseTween();
 		SetupLevelCompleteTween();
+		SetupLevelFailTween();
 	}
 	
 	void Start () {
@@ -58,17 +61,19 @@ public class GameManager : MonoBehaviour {
 	}
 	
 	public void Pause() {
-		Time.timeScale = 0;
 		State = GameState.Paused;
+		Time.timeScale = 0;
 		pauseButton.SetActive(false);
+		
 		pauseInTween.Rewind();
 		pauseInTween.Play();
 	}
 	
 	public void UnPause() {
-		Time.timeScale = 1;
 		State = GameState.Playing;
+		Time.timeScale = 1;
 		pauseButton.SetActive(true);
+		
 		pauseOutTween.Rewind();
 		pauseOutTween.Play();
 	}
@@ -92,16 +97,17 @@ public class GameManager : MonoBehaviour {
 			.AutoKill(false)
 			.Pause()
 		);
-		
-		levelCompleteOutTween = HOTween.To(levelCompleteMenu.transform, 0.5f, new TweenParms()
-			.Prop ("localPosition", new Vector3(0,200,0))
-			.Ease(EaseType.EaseOutQuad)
+	}
+	
+	private void SetupLevelFailTween() {
+		levelFailInTween = HOTween.To(levelFailMenu.transform, 1, new TweenParms()
+			.Prop ("localPosition", Vector3.zero)
+			.Ease(EaseType.EaseOutBounce)
 			.UpdateType(UpdateType.TimeScaleIndependentUpdate)
 			.AutoKill(false)
 			.Pause()
 		);
 	}
-	
 	
 	public void Win() {
 		State = GameState.Winning;
@@ -122,6 +128,14 @@ public class GameManager : MonoBehaviour {
 		winSequence.Play();
 	}
 	
+	public void Lose() {
+		State = GameState.Losing;
+		Time.timeScale = 0;
+		pauseButton.SetActive(false);
+		
+		levelFailInTween.Play();
+	}
+	
 	public void NextLevel() {
 		Time.timeScale = 1;
 		Application.LoadLevel(Application.loadedLevel + 1);
@@ -139,7 +153,7 @@ public class GameManager : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
 		if(!GameObject.FindGameObjectWithTag("RootTip")) {
-			RestartLevel();
+			Lose();
 		}
 	}
 }
