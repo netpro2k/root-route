@@ -111,12 +111,12 @@ public class GameManager : MonoBehaviour {
 		SaveManager.Instance.SaveNutrientsForLevel(0,0,nutrientsCollected);
 		
 		Sequence winSequence = new Sequence(new SequenceParms().UpdateType(UpdateType.TimeScaleIndependentUpdate));
-		winSequence.Append(HOTween.To(Camera.mainCamera.transform, 1, new TweenParms()
+		winSequence.Append(HOTween.To(Camera.mainCamera.transform, 3, new TweenParms()
 			.Prop("position", new Vector3(Camera.mainCamera.transform.position.x, flower.transform.position.y - tkCam.nativeResolutionHeight/2, Camera.mainCamera.transform.position.z))
 			.Ease(EaseType.EaseOutQuad)
 		));
 		winSequence.AppendCallback(GrowFlower);
-		winSequence.AppendInterval(1);
+		winSequence.AppendInterval(1.5f);
 		winSequence.Append (levelCompleteInTween);
 		
 		winSequence.Play();
