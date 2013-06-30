@@ -4,17 +4,17 @@ using Holoville.HOTween;
 
 public class MenuManager : MonoBehaviour {
 	
-	public tk2dTextMesh titleLabel;
-	
 	public GameObject worldSelectContainer;
 	public GameObject[] worldSelectButtons;
-	public AudioClip transitionSound;
-	
+	public tk2dTextMesh worldSelectTitle;
 	private Sequence worldSelectTween;
 	
 	public GameObject levelSelectContainer;
 	public LevelSelectButton[] levelSelectButtons;
+	public tk2dTextMesh levelSelectTitle;
 	private Sequence levelSelectTween;
+	
+	public AudioClip transitionSound;
 	
 	private int selectedWorld = -1;
 	
@@ -36,13 +36,17 @@ public class MenuManager : MonoBehaviour {
 		worldSelectTween = new Sequence(new SequenceParms().AutoKill(false));
 		for (int i = 0; i < worldSelectButtons.Length; i++) {
 			var button = worldSelectButtons[i];
-			button.GetComponent<tk2dUIUpDownDisableButton>().Disabled = i > 0;
+//			button.GetComponent<tk2dUIUpDownDisableButton>().Disabled = i > 0;
 			button.GetComponent<tk2dUIItem>().OnClickUIItem += WorldSelected;
 			worldSelectTween.Insert(1, HOTween.From(button.transform, 0.5f, new TweenParms()
 				.Prop("position", new Vector3(button.transform.position.x, i % 2 == 0 ? 235 : -75, 0))		
 				.Ease(EaseType.EaseOutBack)
 			));
 		}
+		worldSelectTween.Insert(1.3f, HOTween.From(worldSelectTitle.transform, 0.5f, new TweenParms()
+			.Prop("position", new Vector3(worldSelectTitle.transform.position.x, 180, 0))
+			.Ease(EaseType.EaseOutQuad)
+		));
 		worldSelectTween.InsertCallback(1, PlayTransitionSound);
 	}
 
@@ -59,8 +63,8 @@ public class MenuManager : MonoBehaviour {
 			));
 		}
 		
-		levelSelectTween.Insert(0, HOTween.From(titleLabel.transform, 0.5f, new TweenParms()
-			.Prop("position", new Vector3(titleLabel.transform.position.x, 180, 0))
+		levelSelectTween.Insert(0, HOTween.From(levelSelectTitle.transform, 0.5f, new TweenParms()
+			.Prop("position", new Vector3(levelSelectTitle.transform.position.x, 180, 0))
 			.Ease(EaseType.EaseOutQuad)
 		));
 	}
