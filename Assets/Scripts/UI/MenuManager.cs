@@ -43,7 +43,7 @@ public class MenuManager : MonoBehaviour {
 				.Ease(EaseType.EaseOutBack)
 			));
 		}
-		worldSelectTween.Insert(1.3f, HOTween.From(worldSelectTitle.transform, 0.5f, new TweenParms()
+		worldSelectTween.Insert(1, HOTween.From(worldSelectTitle.transform, 0.5f, new TweenParms()
 			.Prop("position", new Vector3(worldSelectTitle.transform.position.x, 180, 0))
 			.Ease(EaseType.EaseOutQuad)
 		));
