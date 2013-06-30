@@ -61,4 +61,15 @@ public class SaveManager
 		PlayerPrefs.Save();
 	}
 	
+	public void SaveNutrientsForCurrentLevel(int nutrients) {
+		SaveNutrientsForLevel(SceneNumberToWorldNumber(Application.loadedLevel), SceneNumberToLevelNumber(Application.loadedLevel), nutrients);
+	}
+	
+	public int SceneNumberToLevelNumber(int sceneNumber) {
+		return (sceneNumber % 10) - 1;
+	}
+	
+	public int SceneNumberToWorldNumber(int sceneNumber) {
+		return Mathf.FloorToInt((sceneNumber -1 ) / 10);
+	}
 }

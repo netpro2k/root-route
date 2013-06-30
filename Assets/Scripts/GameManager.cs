@@ -114,7 +114,7 @@ public class GameManager : MonoBehaviour {
 		Time.timeScale = 0;
 		pauseButton.SetActive(false);
 		
-		SaveManager.Instance.SaveNutrientsForLevel(0,0,nutrientsCollected);
+		SaveManager.Instance.SaveNutrientsForCurrentLevel(nutrientsCollected);
 		
 		Sequence winSequence = new Sequence(new SequenceParms().UpdateType(UpdateType.TimeScaleIndependentUpdate));
 		winSequence.Append(HOTween.To(Camera.mainCamera.transform, 3, new TweenParms()
