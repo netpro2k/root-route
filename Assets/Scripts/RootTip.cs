@@ -60,8 +60,6 @@ public class RootTip : MonoBehaviour {
 	}
 	
 	public RootTip Split() {
-		Handheld.Vibrate();
-		
 		// Update this tip's orientation
 		if(transform.eulerAngles.z == 0) {
 			GameObject junction = SpawnSegment("Y Junction");
