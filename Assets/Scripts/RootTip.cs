@@ -91,7 +91,6 @@ public class RootTip : MonoBehaviour {
 	}
 	
 	public void UpdateSegmentSpawnRate(float newRate) {
-		Debug.Log (newRate);
 		CancelInvoke("SpawnSegment");
 		InvokeRepeating("SpawnSegment", newRate, newRate);
 	}

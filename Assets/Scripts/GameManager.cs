@@ -21,6 +21,8 @@ public class GameManager : MonoBehaviour {
 	public GameObject levelFailMenu;
 	private Tweener levelFailInTween;
 	
+	public AudioClip[] growSounds;
+	
 	private int nutrientsCollected = 0;
 	private tk2dSpriteAnimator flower;
 	private tk2dCamera tkCam;
@@ -35,8 +37,6 @@ public class GameManager : MonoBehaviour {
 	
 	void Start () {
 		flower = GameObject.Find("Seed/Flower").GetComponent<tk2dSpriteAnimator>();
-		flower.gameObject.SetActive(false);
-		
 		tkCam = Camera.mainCamera.GetComponent<tk2dCamera>();
 	}
 	
@@ -123,7 +123,7 @@ public class GameManager : MonoBehaviour {
 		));
 		winSequence.AppendCallback(GrowFlower);
 		winSequence.AppendInterval(1.5f);
-		winSequence.Append (levelCompleteInTween);
+		winSequence.Append(levelCompleteInTween);
 		
 		winSequence.Play();
 	}
@@ -141,9 +141,11 @@ public class GameManager : MonoBehaviour {
 		Application.LoadLevel(Application.loadedLevel + 1);
 	}
 	
-	public void GrowFlower() {
-		flower.gameObject.SetActive(true);
+	public void GrowFlower() {		
 		flower.GetComponent<tk2dSpriteAnimator>().Play("Grow " + nutrientsCollected);
+		Time.timeScale = 1;
+		AudioSource.PlayClipAtPoint(growSounds[nutrientsCollected], flower.transform.position, 0.4f);
+		Time.timeScale = 0;
 	}
 	
 	public void NutrientCollected(){
