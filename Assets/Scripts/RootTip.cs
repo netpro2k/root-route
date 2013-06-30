@@ -28,7 +28,7 @@ public class RootTip : MonoBehaviour {
 	
 	void OnMouseDown() {
 		// TODO do this in a less derp way
-		if(cooldownAnim.CurrentFrame >= cooldownAnim.CurrentClip.frames.Length-1) {
+		if(cooldownAnim.CurrentFrame >= 7) {
 			Split ();
 		}
 	}
