@@ -4,6 +4,10 @@ using Holoville.HOTween;
 
 public class MenuManager : MonoBehaviour {
 	
+	public tk2dSprite titleScreen;
+	public GameObject startButton;
+	private Sequence titleScreenTween;
+	
 	public GameObject worldSelectContainer;
 	public GameObject[] worldSelectButtons;
 	public tk2dTextMesh worldSelectTitle;
@@ -19,6 +23,7 @@ public class MenuManager : MonoBehaviour {
 	private int selectedWorld = -1;
 	
 	void Awake () {
+		SetupTitleScreenTween ();
 		SetupWorldSelectTween ();
 		SetupLevelSelectTween ();
 	}
@@ -28,7 +33,16 @@ public class MenuManager : MonoBehaviour {
 	{	
 		worldSelectContainer.transform.position = Vector3.zero;
 		levelSelectContainer.transform.position = new Vector3(0,999,0);
-		ShowWorldSelect ();
+	}
+	
+	void SetupTitleScreenTween ()
+	{
+		titleScreenTween = new Sequence(new SequenceParms().AutoKill(false));
+		titleScreenTween.Append(HOTween.To(titleScreen, 0.5f, new TweenParms()
+			.Prop("color", new Color(titleScreen.color.r, titleScreen.color.g, titleScreen.color.b, 0))		
+			.Ease(EaseType.EaseOutCubic)
+		));
+		titleScreenTween.AppendCallback(ShowWorldSelect);
 	}
 
 	void SetupWorldSelectTween ()
@@ -102,6 +116,11 @@ public class MenuManager : MonoBehaviour {
 //		LevelSelectButton btn = uiItem.GetComponent<LevelSelectButton>();
 //		Debug.Log ("LEVEL" + btn.levelNumber);
 		StartCoroutine(animateToLevelSelect(1));
+	}
+	
+	void hideTitleScreen () {
+		startButton.SetActive(false);
+		titleScreenTween.Play();
 	}
 	
 	IEnumerator animateToLevelSelect(int world) {
