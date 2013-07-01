@@ -137,6 +137,10 @@ public class GameManager : MonoBehaviour {
 	}
 	
 	public void NextLevel() {
+		if(Application.loadedLevel == 10) {
+			return;
+		}
+		
 		Time.timeScale = 1;
 		Application.LoadLevel(Application.loadedLevel + 1);
 	}
@@ -157,5 +161,9 @@ public class GameManager : MonoBehaviour {
 		if(!GameObject.FindGameObjectWithTag("RootTip")) {
 			Lose();
 		}
+//		
+//		if(Input.GetKeyDown(KeyCode.Space)) {
+//			Application.CaptureScreenshot("screenshot.png", 5);
+//		}
 	}
 }

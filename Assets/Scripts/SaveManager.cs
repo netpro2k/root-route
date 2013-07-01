@@ -66,10 +66,10 @@ public class SaveManager
 	}
 	
 	public int SceneNumberToLevelNumber(int sceneNumber) {
-		return (sceneNumber % 10) - 1;
+		return (sceneNumber - 1) % 10;
 	}
 	
 	public int SceneNumberToWorldNumber(int sceneNumber) {
-		return Mathf.FloorToInt((sceneNumber -1 ) / 10);
+		return Mathf.FloorToInt((sceneNumber - 1 ) / 10);
 	}
 }
